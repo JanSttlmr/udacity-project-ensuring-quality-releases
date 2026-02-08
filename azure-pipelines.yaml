@@ -41,27 +41,41 @@ stages:
         terraformVersion: '1.2.9'
 
     - task: AzureCLI@2
+      displayName: 'Login to Azure SP'
       inputs:
         azureSubscription: 'TerraformConnection'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
+          # login sets env vars automatically
           az account show
     
+    - task: Bash@3
+      displayName: 'Terraform Init'
+      inputs:
+        targetType: 'inline'
+        script: |
+          cd $(System.DefaultWorkingDirectory)/terraform/environments/test
+          terraform init \
+            -backend-config="storage_account_name=tfstate9290792907" \
+            -backend-config="container_name=tfstate" \
+            -backend-config="key=test.terraform.tfstate" \
+            -backend-config="resource_group_name=rg-test"
+        
     # Run Terraform Init on the pipeline agent 
     # ToDo: Replace the resource group name, storage account name, and container name below
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
-      displayName: 'Terrafom init'
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        backendServiceArm: '$(azureServiceConnectionId)'
-        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
-        backendAzureRmResourceGroupName: '$(tfrg)'
-        backendAzureRmStorageAccountName: '$(tfstatenumber)'
-        backendAzureRmContainerName: 'tfstate'
-        backendAzureRmKey: 'test.terraform.tfstate'
+    # - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+    #   displayName: 'Terrafom init'
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'init'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+    #     backendServiceArm: '$(azureServiceConnectionId)'
+    #     environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
+    #     backendAzureRmResourceGroupName: '$(tfrg)'
+    #     backendAzureRmStorageAccountName: '$(tfstatenumber)'
+    #     backendAzureRmContainerName: 'tfstate'
+    #     backendAzureRmKey: 'test.terraform.tfstate'
 
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
       displayName: Terraform validate
@@ -266,6 +280,7 @@ stages:
 #                 python3 login.py >> selenium.log
 
 #                 echo "Completed Selenium Tests. Check selenium.log for results."
+
 
 
 
