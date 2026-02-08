@@ -39,6 +39,14 @@ stages:
       displayName: 'Terrafom installation'
       inputs:
         terraformVersion: '1.2.9'
+
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'TerraformConnection'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az account show
     
     # Run Terraform Init on the pipeline agent 
     # ToDo: Replace the resource group name, storage account name, and container name below
@@ -257,6 +265,7 @@ stages:
 #                 python3 login.py >> selenium.log
 
 #                 echo "Completed Selenium Tests. Check selenium.log for results."
+
 
 
 
