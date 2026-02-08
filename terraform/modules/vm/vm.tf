@@ -26,10 +26,5 @@ resource "azurerm_linux_virtual_machine" "example_vm" {
     caching           = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "18.04-LTS"
-    version   = "latest"
-  }
+  source_image_id = "/subscriptions/f0f1e4fe-3d67-40e7-9a32-b6e793e4d7c4/resourcegroups/linux-test_group/providers/Microsoft.Compute/galleries/compute_gallery/images/linux-test/versions/0.0.1"
 }
