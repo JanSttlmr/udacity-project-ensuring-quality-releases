@@ -53,11 +53,6 @@ stages:
         backendAzureRmStorageAccountName: '$(tfstatenumber)'
         backendAzureRmContainerName: 'tfstate'
         backendAzureRmKey: 'test.terraform.tfstate'
-        envVars: |
-          ARM_TENANT_ID=$(tenant_id)
-          ARM_SUBSCRIPTION_ID=$(subscription_id)
-          ARM_CLIENT_ID=$(client_id)
-          ARM_CLIENT_SECRET=$(client_secret)
 
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
       displayName: Terraform validate
@@ -262,6 +257,7 @@ stages:
 #                 python3 login.py >> selenium.log
 
 #                 echo "Completed Selenium Tests. Check selenium.log for results."
+
 
 
 
