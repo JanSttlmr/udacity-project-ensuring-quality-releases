@@ -11,7 +11,7 @@ terraform {
     container_name       = "tfstate"
     key                  = "test.terraform.tfstate"
     resource_group_name  = "devops-test"
-    #access_key           = var.storage_account_access_key
+    #access_key           = ""
   }
 }
 module "resource_group" {
