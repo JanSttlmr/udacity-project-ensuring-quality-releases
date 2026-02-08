@@ -12,6 +12,10 @@ resource "azurerm_linux_web_app" "test" {
   resource_group_name = "${var.resource_group}"
   service_plan_id     = azurerm_service_plan.test.id
 
+  depends_on = [
+    azurerm_service_plan.test
+  ]
+
   app_settings = {
     "WEBSITE_RUN_FROM_PACKAGE" = 0
   }
