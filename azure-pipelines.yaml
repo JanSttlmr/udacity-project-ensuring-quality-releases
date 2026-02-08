@@ -56,7 +56,7 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        backendServiceArm: '$(azureServiceConnectionId)'
+        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
         backendAzureRmResourceGroupName: '$(tfrg)'
         backendAzureRmStorageAccountName: '$(tfstatenumber)'
         backendAzureRmContainerName: 'tfstate'
@@ -265,6 +265,7 @@ stages:
 #                 python3 login.py >> selenium.log
 
 #                 echo "Completed Selenium Tests. Check selenium.log for results."
+
 
 
 
