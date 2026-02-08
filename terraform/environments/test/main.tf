@@ -64,4 +64,5 @@ module "vm" {
   application_type     = var.application_type
   subnet_id            = module.network.subnet_id_test
   public_ip_address_id = module.publicip.public_ip_address_id
+  custom_image_id = var.custom_image_id
 }
