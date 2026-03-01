@@ -18,11 +18,11 @@ variables:
   projectRoot: $(System.DefaultWorkingDirectory)
   # Environment name
   environmentName: 'test-vm'
-  tfstatenumber : "tfstate9290792907"
-  # terraform resource group
-  tfrg: 'rg-test'
-  # webapp name
-  application_type: 'project-qa'
+  # tfstatenumber : "tfstate9290792907"
+  # # terraform resource group
+  # tfrg: 'rg-test'
+  # # webapp name
+  # application_type: 'project-qa'
 
 stages:
 #--------------------------------------------#  
@@ -43,14 +43,13 @@ stages:
         
     # Run Terraform Init on the pipeline agent 
     #ToDo: Replace the resource group name, storage account name, and container name below
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV1@0
+    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
       displayName: 'Terrafom init'
       inputs:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
         backendServiceArm: '$(azureServiceConnectionId)'
-        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
         backendAzureRmResourceGroupName: '$(tfrg)'
         backendAzureRmStorageAccountName: '$(tfstatenumber)'
         backendAzureRmContainerName: 'tfstate'
@@ -259,6 +258,7 @@ stages:
 #                 python3 login.py >> selenium.log
 
 #                 echo "Completed Selenium Tests. Check selenium.log for results."
+
 
 
 
