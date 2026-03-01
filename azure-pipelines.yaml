@@ -49,7 +49,7 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: 'terraform/environments/test'
-        backendServiceArm: 'TerraformConnection'
+        backendServiceArm: 'TerraformConnection2'
         backendAzureRmResourceGroupName: 'rg-test'
         backendAzureRmStorageAccountName: 'tfstate9290792907'
         backendAzureRmContainerName: 'tfstate'
