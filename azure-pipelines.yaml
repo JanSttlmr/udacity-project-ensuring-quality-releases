@@ -41,6 +41,7 @@ stages:
         terraformVersion: '1.2.9'
   
     - script: |
+        cd $(System.DefaultWorkingDirectory)/terraform/environments/test
         terraform init \
           -backend-config="storage_account_name=$(tfstatenumber)" \
           -backend-config="container_name=tfstate" \
@@ -65,24 +66,27 @@ stages:
         provider: 'azurerm'
         command: 'validate'
 
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+    - script: |
+        cd $(System.DefaultWorkingDirectory)/terraform/environments/test
+        terraform plan -out=tfplan
       displayName: 'Terraform Plan'
-      inputs:
-        provider: 'azurerm'
-        command: 'plan'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
+      env:
+        ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+        ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+        ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+        ARM_TENANT_ID: $(ARM_TENANT_ID)
 
     
     # Run Terraform Apply
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
-      displayName: Terraform apply
-      inputs:
-        provider: 'azurerm'
-        command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
-        runPlan: true
+    - script: |
+        cd $(System.DefaultWorkingDirectory)/terraform/environments/test
+        terraform apply -auto-approve tfplan
+      displayName: 'Terraform Apply'
+      env:
+        ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+        ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+        ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+        ARM_TENANT_ID: $(ARM_TENANT_ID)
 
     # ToDo: Change the workingDirectory path, as applicable to you
     # Destroy the resources in Azure by running a separate pipeline. 
