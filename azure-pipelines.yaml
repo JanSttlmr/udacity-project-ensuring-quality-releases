@@ -48,10 +48,10 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        backendServiceArm: '$(azureServiceConnectionId)'
-        backendAzureRmResourceGroupName: '$(tfrg)'
-        backendAzureRmStorageAccountName: '$(tfstatenumber)'
+        workingDirectory: 'terraform/terraform/environments/test'
+        backendServiceArm: 'TerraformConnection'
+        backendAzureRmResourceGroupName: 'rg-test'
+        backendAzureRmStorageAccountName: 'tfstate9290792907'
         backendAzureRmContainerName: 'tfstate'
         backendAzureRmKey: 'test.terraform.tfstate'
 
