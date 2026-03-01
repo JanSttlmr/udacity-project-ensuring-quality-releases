@@ -18,9 +18,9 @@ variables:
   projectRoot: $(System.DefaultWorkingDirectory)
   # Environment name
   environmentName: 'test-vm'
-  # tfstatenumber : "tfstate9290792907"
-  # # terraform resource group
-  # tfrg: 'rg-test'
+  tfstatenumber : "tfstate9290792907"
+  # terraform resource group
+  tfrg: 'rg-test'
   # # webapp name
   # application_type: 'project-qa'
 
@@ -258,6 +258,7 @@ stages:
 #                 python3 login.py >> selenium.log
 
 #                 echo "Completed Selenium Tests. Check selenium.log for results."
+
 
 
 
