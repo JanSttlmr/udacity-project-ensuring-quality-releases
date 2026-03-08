@@ -10,7 +10,7 @@ terraform {
     storage_account_name = "tfstate9290792907"
     container_name       = "tfstate"
     key                  = "test.terraform.tfstate"
-    resource_group_name  = "devops-test"
+    resource_group_name  = "rg-test"
     #access_key           = ""
   }
 }
