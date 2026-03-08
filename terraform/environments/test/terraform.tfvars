@@ -5,11 +5,11 @@ client_secret = ""
 tenant_id = ""
 
 # Resource Group/Location
-location = ""
-resource_group_name = ""
-application_type = ""
+location = "westeurope"
+resource_group = "devops-test-3"
+application_type = "testApplication"
 
 # Network
-virtual_network_name = ""
+virtual_network_name = "vnet_test"
 address_space = ["10.5.0.0/16"]
 address_prefix_test = "10.5.1.0/24"
