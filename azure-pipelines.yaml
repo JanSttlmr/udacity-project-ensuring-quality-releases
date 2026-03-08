@@ -40,6 +40,7 @@ stages:
       inputs:
         terraformVersion: '1.2.9'
   
+
     - script: |
         cd $(System.DefaultWorkingDirectory)/terraform/environments/test
         terraform init \
@@ -58,7 +59,7 @@ stages:
         ARM_CLIENT_ID: $(clientId)
         ARM_CLIENT_SECRET: $(clientSecret)
         ARM_TENANT_ID: $(tenantId)
-        
+      
 
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
       displayName: Terraform validate
