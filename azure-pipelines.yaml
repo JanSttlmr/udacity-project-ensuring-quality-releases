@@ -39,7 +39,18 @@ stages:
       displayName: 'Terrafom installation'
       inputs:
         terraformVersion: '1.2.9'
-  
+
+    - script: |
+        echo "SUB: $ARM_SUBSCRIPTION_ID"
+        echo "CLIENT: $ARM_CLIENT_ID"
+        echo "CLIENT SECRET: $ARM_CLIENT_SECRET"
+        echo "TENANT: $ARM_TENANT_ID"
+      displayName: Debug ARM variables
+      env:
+        ARM_SUBSCRIPTION_ID: $(subscriptionId)
+        ARM_CLIENT_ID: $(clientId)
+        ARM_CLIENT_SECRET: $(clientSecret)
+        ARM_TENANT_ID: $(tenantId)
 
     - script: |
         cd $(System.DefaultWorkingDirectory)/terraform/environments/test
@@ -66,18 +77,6 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'validate'
-
-    - script: |
-        echo "SUB: $ARM_SUBSCRIPTION_ID"
-        echo "CLIENT: $ARM_CLIENT_ID"
-        echo "CLIENT SECRET: $ARM_CLIENT_SECRET"
-        echo "TENANT: $ARM_TENANT_ID"
-      displayName: Debug ARM variables
-      env:
-        ARM_SUBSCRIPTION_ID: $(subscriptionId)
-        ARM_CLIENT_ID: $(clientId)
-        ARM_CLIENT_SECRET: $(clientSecret)
-        ARM_TENANT_ID: $(tenantId)
 
     - script: |
         cd $(System.DefaultWorkingDirectory)/terraform/environments/test
@@ -300,6 +299,7 @@ stages:
 #                 python3 login.py >> selenium.log
 
 #                 echo "Completed Selenium Tests. Check selenium.log for results."
+
 
 
 
