@@ -189,6 +189,17 @@ stages:
       displayName: 'Upload Package'
       artifact: drop-perftests
 
+    # Run Terraform Destroy
+    - script: |
+        cd $(System.DefaultWorkingDirectory)/terraform/environments/test
+        terraform destroy -auto-approve
+      displayName: 'Terraform Destroy'
+      env:
+        ARM_SUBSCRIPTION_ID: $(subscriptionId)
+        ARM_CLIENT_ID: $(clientId)
+        ARM_CLIENT_SECRET: $(clientSecret)
+        ARM_TENANT_ID: $(tenantId)
+
 #--------------------------------------------#  
 #DEPLOYMENT STAGE
 #--------------------------------------------#    
@@ -271,6 +282,7 @@ stages:
 #                 python3 login.py >> selenium.log
 
 #                 echo "Completed Selenium Tests. Check selenium.log for results."
+
 
 
 
