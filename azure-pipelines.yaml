@@ -83,14 +83,10 @@ stages:
         terraform plan -out=tfplan
       displayName: 'Terraform Plan'
       env:
-        # ARM_SUBSCRIPTION_ID: $(subscriptionId)
-        # ARM_CLIENT_ID: $(clientId)
-        # ARM_CLIENT_SECRET: $(clientSecret)
-        # ARM_TENANT_ID: $(tenantId)
-        TF_VAR_tenant_id: $(tenantId)
-        TF_VAR_subscription_id: $(subscriptionId)
-        TF_VAR_client_id: $(clientId)
-        TF_VAR_client_secret: $(clientSecret)
+        ARM_SUBSCRIPTION_ID: $(subscriptionId)
+        ARM_CLIENT_ID: $(clientId)
+        ARM_CLIENT_SECRET: $(clientSecret)
+        ARM_TENANT_ID: $(tenantId)
 
     # - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
     #   displayName: Terraform apply
@@ -303,6 +299,7 @@ stages:
 #                 python3 login.py >> selenium.log
 
 #                 echo "Completed Selenium Tests. Check selenium.log for results."
+
 
 
 
