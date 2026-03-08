@@ -47,10 +47,14 @@ stages:
           -backend-config="container_name=tfstate" \
           -backend-config="key=test.terraform.tfstate" \
           -backend-config="resource_group_name=$(tfrg)" \
-          -backend-config="subscription_id=$(ARM_SUBSCRIPTION_ID)" \
-          -backend-config="client_id=$(ARM_CLIENT_ID)" \
-          -backend-config="client_secret=$(ARM_CLIENT_SECRET)" \
-          -backend-config="tenant_id=$(ARM_TENANT_ID)"
+          # -backend-config="subscription_id=$(ARM_SUBSCRIPTION_ID)" \
+          # -backend-config="client_id=$(ARM_CLIENT_ID)" \
+          # -backend-config="client_secret=$(ARM_CLIENT_SECRET)" \
+          # -backend-config="tenant_id=$(ARM_TENANT_ID)"
+          -backend-config="subscription_id=$(subscriptionId)" \
+          -backend-config="client_id=$(clientId)" \
+          -backend-config="client_secret=$(clientSecret)" \
+          -backend-config="tenant_id=$(tenantId)"
       displayName: 'Terraform Init'
       workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
       env:
@@ -287,6 +291,7 @@ stages:
 #                 python3 login.py >> selenium.log
 
 #                 echo "Completed Selenium Tests. Check selenium.log for results."
+
 
 
 
