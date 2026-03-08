@@ -66,15 +66,15 @@ stages:
         provider: 'azurerm'
         command: 'validate'
 
-    # - script: |
-    #     cd $(System.DefaultWorkingDirectory)/terraform/environments/test
-    #     terraform plan -out=tfplan
-    #   displayName: 'Terraform Plan'
-    #   env:
-    #     ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-    #     ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-    #     ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-    #     ARM_TENANT_ID: $(ARM_TENANT_ID)
+    - script: |
+        cd $(System.DefaultWorkingDirectory)/terraform/environments/test
+        terraform plan -out=tfplan
+      displayName: 'Terraform Plan'
+      env:
+        ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+        ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+        ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+        ARM_TENANT_ID: $(ARM_TENANT_ID)
 
     
     # # Run Terraform Apply
@@ -258,6 +258,7 @@ stages:
 #                 python3 login.py >> selenium.log
 
 #                 echo "Completed Selenium Tests. Check selenium.log for results."
+
 
 
 
