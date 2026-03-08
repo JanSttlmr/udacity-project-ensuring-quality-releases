@@ -68,15 +68,7 @@ stages:
 
     - script: |
         cd $(System.DefaultWorkingDirectory)/terraform/environments/test
-        terraform plan -out=tfplan \
-          -backend-config="storage_account_name=$(tfstatenumber)" \
-          -backend-config="container_name=tfstate" \
-          -backend-config="key=test.terraform.tfstate" \
-          -backend-config="resource_group_name=$(tfrg)" \
-          -backend-config="subscription_id=$(ARM_SUBSCRIPTION_ID)" \
-          -backend-config="client_id=$(ARM_CLIENT_ID)" \
-          -backend-config="client_secret=$(ARM_CLIENT_SECRET)" \
-          -backend-config="tenant_id=$(ARM_TENANT_ID)"
+        terraform plan -out=tfplan
       displayName: 'Terraform Plan'
       env:
         ARM_SUBSCRIPTION_ID: $(subscriptionId)
@@ -295,6 +287,7 @@ stages:
 #                 python3 login.py >> selenium.log
 
 #                 echo "Completed Selenium Tests. Check selenium.log for results."
+
 
 
 
