@@ -73,7 +73,7 @@ stages:
 
     - script: |
         export TF_LOG=DEBUG
-        terraform init \
+        terraform init -reconfigure\
           -backend-config="storage_account_name=$(tfstatenumber)" \
           -backend-config="container_name=tfstate" \
           -backend-config="key=test.terraform.tfstate" \
@@ -318,6 +318,7 @@ stages:
 #                 python3 login.py >> selenium.log
 
 #                 echo "Completed Selenium Tests. Check selenium.log for results."
+
 
 
 
