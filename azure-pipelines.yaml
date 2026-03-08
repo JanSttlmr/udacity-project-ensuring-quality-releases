@@ -101,7 +101,7 @@ stages:
         terraform apply -auto-approve tfplan
       displayName: 'Terraform Apply'
       env:
-         ARM_SUBSCRIPTION_ID: $(subscriptionId)
+        ARM_SUBSCRIPTION_ID: $(subscriptionId)
         ARM_CLIENT_ID: $(clientId)
         ARM_CLIENT_SECRET: $(clientSecret)
         ARM_TENANT_ID: $(tenantId)
@@ -287,6 +287,7 @@ stages:
 #                 python3 login.py >> selenium.log
 
 #                 echo "Completed Selenium Tests. Check selenium.log for results."
+
 
 
 
