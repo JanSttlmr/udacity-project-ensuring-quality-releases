@@ -99,16 +99,16 @@ stages:
         ARM_CLIENT_SECRET: $(clientSecret)
         ARM_TENANT_ID: $(tenantId)
 
-    #     #     # Run Terraform Destroy
-    # - script: |
-    #     cd $(System.DefaultWorkingDirectory)/terraform/environments/test
-    #     terraform destroy -auto-approve
-    #   displayName: 'Terraform Destroy'
-    #   env:
-    #     ARM_SUBSCRIPTION_ID: $(subscriptionId)
-    #     ARM_CLIENT_ID: $(clientId)
-    #     ARM_CLIENT_SECRET: $(clientSecret)
-    #     ARM_TENANT_ID: $(tenantId)
+    # Run Terraform Destroy
+    - script: |
+        cd $(System.DefaultWorkingDirectory)/terraform/environments/test
+        terraform destroy -auto-approve
+      displayName: 'Terraform Destroy'
+      env:
+        ARM_SUBSCRIPTION_ID: $(subscriptionId)
+        ARM_CLIENT_ID: $(clientId)
+        ARM_CLIENT_SECRET: $(clientSecret)
+        ARM_TENANT_ID: $(tenantId)
 
 #    #--------------------------------------------#    
 #    #schildner
