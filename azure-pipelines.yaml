@@ -28,76 +28,76 @@ stages:
 #--------------------------------------------#  
 # BUILD STAGE
 #--------------------------------------------#    
-# - stage: Build
-#   jobs:
-#   - job: BuildInfrastructure
-#     steps:
-#     #--------------------------------------------#  
-#     # Use Terraform to create the Infrastructure      
-#     # Install Terraform on the pipeline agent 
-#     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
-#       displayName: 'Terrafom installation'
-#       inputs:
-#         terraformVersion: '1.2.9'
+- stage: Build
+  jobs:
+  - job: BuildInfrastructure
+    steps:
+    #--------------------------------------------#  
+    # Use Terraform to create the Infrastructure      
+    # Install Terraform on the pipeline agent 
+    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+      displayName: 'Terrafom installation'
+      inputs:
+        terraformVersion: '1.2.9'
 
-#     - script: |
-#         echo "SUB: $ARM_SUBSCRIPTION_ID"
-#         echo "CLIENT: $ARM_CLIENT_ID"
-#         echo "CLIENT SECRET: $ARM_CLIENT_SECRET"
-#         echo "TENANT: $ARM_TENANT_ID"
-#       displayName: Debug ARM variables
-#       env:
-#         ARM_SUBSCRIPTION_ID: $(subscriptionId)
-#         ARM_CLIENT_ID: $(clientId)
-#         ARM_CLIENT_SECRET: $(clientSecret)
-#         ARM_TENANT_ID: $(tenantId)
+    - script: |
+        echo "SUB: $ARM_SUBSCRIPTION_ID"
+        echo "CLIENT: $ARM_CLIENT_ID"
+        echo "CLIENT SECRET: $ARM_CLIENT_SECRET"
+        echo "TENANT: $ARM_TENANT_ID"
+      displayName: Debug ARM variables
+      env:
+        ARM_SUBSCRIPTION_ID: $(subscriptionId)
+        ARM_CLIENT_ID: $(clientId)
+        ARM_CLIENT_SECRET: $(clientSecret)
+        ARM_TENANT_ID: $(tenantId)
 
-#     - script: |
-#         cd $(System.DefaultWorkingDirectory)/terraform/environments/test
-#         terraform init \
-#           -backend-config="storage_account_name=$(tfstatenumber)" \
-#           -backend-config="container_name=tfstate" \
-#           -backend-config="key=test.terraform.tfstate" \
-#           -backend-config="resource_group_name=$(tfrg)" \
-#           -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID" \
-#           -backend-config="client_id=$ARM_CLIENT_ID" \
-#           -backend-config="client_secret=$ARM_CLIENT_SECRET" \
-#           -backend-config="tenant_id=$ARM_TENANT_ID"
-#       displayName: 'Terraform Init'
-#       workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-#       env:
-#         ARM_SUBSCRIPTION_ID: $(subscriptionId)
-#         ARM_CLIENT_ID: $(clientId)
-#         ARM_CLIENT_SECRET: $(clientSecret)
-#         ARM_TENANT_ID: $(tenantId)
+    - script: |
+        cd $(System.DefaultWorkingDirectory)/terraform/environments/test
+        terraform init \
+          -backend-config="storage_account_name=$(tfstatenumber)" \
+          -backend-config="container_name=tfstate" \
+          -backend-config="key=test.terraform.tfstate" \
+          -backend-config="resource_group_name=$(tfrg)" \
+          -backend-config="subscription_id=$ARM_SUBSCRIPTION_ID" \
+          -backend-config="client_id=$ARM_CLIENT_ID" \
+          -backend-config="client_secret=$ARM_CLIENT_SECRET" \
+          -backend-config="tenant_id=$ARM_TENANT_ID"
+      displayName: 'Terraform Init'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+      env:
+        ARM_SUBSCRIPTION_ID: $(subscriptionId)
+        ARM_CLIENT_ID: $(clientId)
+        ARM_CLIENT_SECRET: $(clientSecret)
+        ARM_TENANT_ID: $(tenantId)
       
 
-#     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
-#       displayName: Terraform validate
-#       inputs:
-#         provider: 'azurerm'
-#         command: 'validate'
+    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+      displayName: Terraform validate
+      inputs:
+        provider: 'azurerm'
+        command: 'validate'
 
-#     - script: |
-#         cd $(System.DefaultWorkingDirectory)/terraform/environments/test
-#         terraform plan -out=tfplan
-#       displayName: 'Terraform Plan'
-#       env:
-#         ARM_SUBSCRIPTION_ID: $(subscriptionId)
-#         ARM_CLIENT_ID: $(clientId)
-#         ARM_CLIENT_SECRET: $(clientSecret)
-#         ARM_TENANT_ID: $(tenantId)
+    - script: |
+        cd $(System.DefaultWorkingDirectory)/terraform/environments/test
+        terraform plan -out=tfplan
+      displayName: 'Terraform Plan'
+      env:
+        ARM_SUBSCRIPTION_ID: $(subscriptionId)
+        ARM_CLIENT_ID: $(clientId)
+        ARM_CLIENT_SECRET: $(clientSecret)
+        ARM_TENANT_ID: $(tenantId)
     
-#     # Run Terraform Apply
-#     - script: |
-#         cd $(System.DefaultWorkingDirectory)/terraform/environments/test
-#         terraform apply -auto-approve tfplan
-#       displayName: 'Terraform Apply'
-#       env:
-#         ARM_SUBSCRIPTION_ID: $(subscriptionId)
-#         ARM_CLIENT_ID: $(clientId)
-#         ARM_CLIENT_SECRET: $(clientSecret)
-#         ARM_TENANT_ID: $(tenantId)
+    # Run Terraform Apply
+    - script: |
+        cd $(System.DefaultWorkingDirectory)/terraform/environments/test
+        terraform apply -auto-approve tfplan
+      displayName: 'Terraform Apply'
+      env:
+        ARM_SUBSCRIPTION_ID: $(subscriptionId)
+        ARM_CLIENT_ID: $(clientId)
+        ARM_CLIENT_SECRET: $(clientSecret)
+        ARM_TENANT_ID: $(tenantId)
 
 #    #--------------------------------------------#    
 #    #schildner
