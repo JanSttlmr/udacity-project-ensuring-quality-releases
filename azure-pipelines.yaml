@@ -151,7 +151,7 @@ stages:
   # --------------------------------------------#  
   # Deploy FakeRestAPI Web App
   - deployment: DeployApi
-    pool: myAP    
+    #pool: myAP    
     environment: $(environmentName)
     strategy:
       runOnce:
@@ -311,7 +311,7 @@ stages:
         
 - stage: Destroy
   jobs:
-  - job: Destroy Infrastructure
+  - job: DestroyInfrastructure
     steps:
     - script: |
         cd $(System.DefaultWorkingDirectory)/terraform/environments/test
