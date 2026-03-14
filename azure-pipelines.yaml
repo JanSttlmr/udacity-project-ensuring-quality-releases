@@ -210,7 +210,7 @@ stages:
     # Jmeter - Performance Test Suite     
   - job: TestJMeter
     displayName: Test JMeter
-    pool: myAP
+   # pool: myAP
     steps:
     - bash: |
         sudo apt-get install openjdk-11-jre-headless -y
