@@ -22,6 +22,10 @@ resource "azurerm_linux_virtual_machine" "example_vm" {
     username   = var.vm_admin_username
     public_key = var.vm_admin_ssh_key
   }
+
+  secure_boot_enabled = true
+  vtpm_enabled        = true
+
   os_disk {
     caching           = "ReadWrite"
     storage_account_type = "Standard_LRS"
