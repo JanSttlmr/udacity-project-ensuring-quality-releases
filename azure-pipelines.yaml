@@ -178,6 +178,8 @@ stages:
               appName: 'testApplication-AppService'
               appType: 'webApp'
               package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
+              appSettings: |
+                -WEBSITE_RUN_FROM_PACKAGE 0
 # --------------------------------------------#  
 # TEST STAGE
 # --------------------------------------------#    
