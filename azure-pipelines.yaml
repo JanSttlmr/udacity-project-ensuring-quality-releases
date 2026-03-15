@@ -176,7 +176,7 @@ stages:
               azureSubscription: '$(azureServiceConnectionId)'
               resourceGroupName: 'devops-test-3'              
               appName: 'testApplication-AppService'
-              appType: 'webAppLinux'
+              appType: 'webApp'
               package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
 # --------------------------------------------#  
 # TEST STAGE
