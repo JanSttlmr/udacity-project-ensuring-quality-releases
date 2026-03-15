@@ -168,6 +168,8 @@ stages:
       runOnce:
         deploy:
           steps:
+          - download: current
+            artifact: drop-fakerestapi
           - task: AzureWebApp@1
             displayName: 'Deploy Azure Web App'
             inputs:
@@ -225,6 +227,13 @@ stages:
     displayName: Test JMeter
    # pool: myAP
     steps:
+    - bash: |
+        echo "Waiting for API..."
+        until curl -s https://testapplication-appservice.azurewebsites.net > /dev/null; do
+          echo "Still waiting..."
+          sleep 10
+        done
+      displayName: Wait for API startup
     - bash: |
         sudo apt-get install openjdk-11-jre-headless -y
         java -version
