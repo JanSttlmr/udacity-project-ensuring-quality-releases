@@ -170,16 +170,25 @@ stages:
           steps:
           - download: current
             artifact: drop-fakerestapi
+          # - task: AzureWebApp@1
+          #   displayName: 'Deploy Azure Web App'
+          #   inputs:
+          #     azureSubscription: '$(azureServiceConnectionId)'
+          #     resourceGroupName: 'devops-test-3'              
+          #     appName: 'testApplication-AppService'
+          #     appType: 'webApp'
+          #     package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
+          #     appSettings: |
+          #       -WEBSITE_RUN_FROM_PACKAGE 0
+          #new try
           - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App'
+            displayName: 'Deploy FakeRestAPI Web App as folder'
             inputs:
               azureSubscription: '$(azureServiceConnectionId)'
-              resourceGroupName: 'devops-test-3'              
               appName: 'testApplication-AppService'
-              appType: 'webApp'
-              package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
-              appSettings: |
-                -WEBSITE_RUN_FROM_PACKAGE 0
+              resourceGroupName: 'devops-test-3'
+              package: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi/*'
+              appType: 'webAppLinux'
 # --------------------------------------------#  
 # TEST STAGE
 # --------------------------------------------#    
