@@ -34,7 +34,7 @@
       <hashTree>
         <!-- CSV Data Set -->
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Book IDs CSV" enabled="true">
-          <stringProp name="filename">books.csv</stringProp>
+          <stringProp name="filename">ids.csv</stringProp>
           <stringProp name="fileEncoding"></stringProp>
           <stringProp name="delimiter">,</stringProp>
           <boolProp name="ignoreFirstLine">true</boolProp>
