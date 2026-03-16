@@ -99,7 +99,7 @@ stages:
         ARM_CLIENT_SECRET: $(clientSecret)
         ARM_TENANT_ID: $(tenantId)
 
-    Run Terraform Destroy
+   # Run Terraform Destroy
     - script: |
         cd $(System.DefaultWorkingDirectory)/terraform/environments/test
         terraform destroy -auto-approve
