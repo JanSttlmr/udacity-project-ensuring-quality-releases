@@ -188,7 +188,7 @@ stages:
               azureSubscription: '$(azureServiceConnectionId)'
               appName: 'testApplication-AppService'
               resourceGroupName: 'devops-test-3'
-              package: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi/*'
+              package: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
               appType: 'webAppLinux'
 # --------------------------------------------#  
 # TEST STAGE
