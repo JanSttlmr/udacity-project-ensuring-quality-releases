@@ -193,9 +193,9 @@ stages:
 # --------------------------------------------#  
 # TEST STAGE
 # --------------------------------------------#    
-# - stage: Test
-#   dependsOn: Deploy
-#   jobs:
+- stage: Test
+  dependsOn: Deploy
+  jobs:
 #   - job: TestAPI
 #     steps:
 #     # --------------------------------------------#    
