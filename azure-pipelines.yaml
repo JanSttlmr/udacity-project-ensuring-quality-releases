@@ -189,7 +189,7 @@ stages:
               appName: 'testApplication-AppService'
               resourceGroupName: 'devops-test-3'
               package: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
-              appType: 'webAppLinux'
+              appType: 'webApp'
 # --------------------------------------------#  
 # TEST STAGE
 # --------------------------------------------#    
