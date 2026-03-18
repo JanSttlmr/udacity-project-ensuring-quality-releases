@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "f4915dd0-b0d4-4707-be58-2d28b15cd9d6",
 		"name": "TestSuite.Regression",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
