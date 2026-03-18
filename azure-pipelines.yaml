@@ -249,18 +249,18 @@ stages:
     - bash: |
         sudo apt-get install openjdk-11-jre-headless -y
         java -version
-        wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.4.tgz -O jmeter.tgz
+        wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.2.tgz -O jmeter.tgz
         tar xzvf jmeter.tgz
         mkdir -p log/jmeter
       displayName: Install JMeter
     - bash: |
-        apache-jmeter-5.4/bin/jmeter -n -t automatedtesting/jmeter/stress-test.jmx \
+        apache-jmeter-5.6.2/bin/jmeter -n -t automatedtesting/jmeter/stress-test.jmx \
                                     -l log/jmeter/stress-test-result.csv \
                                     -e -f -o log/jmeter/stress-test-html-report \
                                     -j log/jmeter/jmeter-stress-test.log
       displayName: JMeter Stress Test
     - bash: |
-        apache-jmeter-5.4/bin/jmeter -n -t automatedtesting/jmeter/endurance-test.jmx \
+        apache-jmeter-5.6.2/bin/jmeter -n -t automatedtesting/jmeter/endurance-test.jmx \
                                     -l log/jmeter/endurance-test-result.csv \
                                     -e -f -o log/jmeter/endurance-test-html-report \
                                     -j log/jmeter/jmeter-endurance-test.log
