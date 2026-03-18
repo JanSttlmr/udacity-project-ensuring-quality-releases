@@ -111,7 +111,6 @@ stages:
     #     ARM_TENANT_ID: $(tenantId)
 
 #    #--------------------------------------------#    
-#    #schildner
     
     # JMeter (Performance) Test Suite - Archive
     # ToDo: Complete the ArchiveFiles@2 task and publish step 
@@ -196,42 +195,42 @@ stages:
 - stage: Test
   dependsOn: Deploy
   jobs:
-#   - job: TestAPI
-#     steps:
-#     # --------------------------------------------#    
-#     # Postman - Install Newman    
-#     - task: CmdLine@2
-#       displayName: Install Newman
-#       inputs:
-#         script: |
-#           sudo apt-get -y install npm
-#           sudo npm cache clean -f
-#           sudo npm install -g n
-#           sudo n stable
-#           sudo npm install -g newman
-#         workingDirectory: $(projectRoot)
-#     # Postman Data Validation Test Suite    
-#     - task: CmdLine@2
-#       displayName: Run Data Validation Tests
-#       continueOnError: true
-#       inputs:
-#         script: 'newman run TestSuite.Data-Validation.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-DataValidation.xml'
-#         workingDirectory: '$(projectRoot)/automatedtesting/postman'
-#     # Postman Regression Test Suite    
-#     - task: CmdLine@2
-#       displayName: Run Regression Tests
-#       continueOnError: true
-#       inputs:
-#         script: 'newman run TestSuite.Regression.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml'
-#         workingDirectory: '$(projectRoot)/automatedtesting/postman'
-#     # Postman - Publish Results 
-#     - task: PublishTestResults@2
-#       inputs:
-#         testResultsFormat: 'JUnit'
-#         testResultsFiles: '**/TEST-*.xml'
-#         searchFolder: 'automatedtesting/postman'
-#         mergeTestResults: true
-#         testRunTitle: 'Publish test results'
+  - job: TestAPI
+    steps:
+    # --------------------------------------------#    
+    # Postman - Install Newman    
+    - task: CmdLine@2
+      displayName: Install Newman
+      inputs:
+        script: |
+          sudo apt-get -y install npm
+          sudo npm cache clean -f
+          sudo npm install -g n
+          sudo n stable
+          sudo npm install -g newman
+        workingDirectory: $(projectRoot)
+    # Postman Data Validation Test Suite    
+    - task: CmdLine@2
+      displayName: Run Data Validation Tests
+      continueOnError: true
+      inputs:
+        script: 'newman run TestSuite.Data-Validation.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-DataValidation.xml'
+        workingDirectory: '$(projectRoot)/automatedtesting/postman'
+    # Postman Regression Test Suite    
+    - task: CmdLine@2
+      displayName: Run Regression Tests
+      continueOnError: true
+      inputs:
+        script: 'newman run TestSuite.Regression.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml'
+        workingDirectory: '$(projectRoot)/automatedtesting/postman'
+    # Postman - Publish Results 
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/TEST-*.xml'
+        searchFolder: 'automatedtesting/postman'
+        mergeTestResults: true
+        testRunTitle: 'Publish test results'
   
 #    --------------------------------------------
 #    Jmeter - Performance Test Suite     
