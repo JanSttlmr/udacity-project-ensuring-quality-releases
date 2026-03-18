@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "4dbed307-88b1-48df-9089-9dbe285d08d3",
 		"name": "TestSuite.Data-Validation",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
