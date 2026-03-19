@@ -403,7 +403,7 @@ stages:
                   export PATH=$PATH:$PWD
     
                   # Run your Selenium test
-                  python3 -u add_remove_from_cart.py 2>&1 | tee selenium-test.log
+                  python3 -u login.py 2>&1 | tee selenium-test.log
     
             # ---------------- Publish Logs ----------------
             - task: PublishPipelineArtifact@1
