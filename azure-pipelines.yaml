@@ -284,7 +284,6 @@ stages:
     environment:
       name: $(environmentName)         # ToDo: Change/provide a name
       resourceType: VirtualMachine
-      tags: selenium
     strategy:
       runOnce:
         deploy:
