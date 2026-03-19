@@ -179,7 +179,7 @@ stages:
 # --------------------------------------------#  
 # TEST STAGE
 # --------------------------------------------#    
-# - stage: Test
+- stage: Test
   dependsOn: Deploy
   jobs:
   - job: TestAPI
