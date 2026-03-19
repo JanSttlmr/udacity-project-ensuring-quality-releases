@@ -276,58 +276,53 @@ stages:
   #--------------------------------------------#  
   # Selenium | Functional UI Tests
   # ToDo: 
+   #--------------------------------------------#  
+  # Selenium | Functional UI Tests
+  # ToDo: 
   - deployment: VMDeploy
     displayName: Selenium Tests
     environment:
-      name: $(environmentName)         
+      name: $(environmentName)         # ToDo: Change/provide a name
       resourceType: VirtualMachine
+      tags: selenium
     strategy:
       runOnce:
         deploy:
           steps:
+          - download: current
+            artifact: drop-ui-tests     # ToDo: Change/provide a name
+            
           - task: Bash@3
-            displayName: Selenium installs
             inputs:
               targetType: 'inline'
               script: |           
-                #!/bin/bash
-
-                sudo apt-get update -y
+                #! /bin/bash
+                
                 sudo apt-get upgrade -y
                 sudo apt-get install python3-pip -y
                 sudo apt-get install unzip -y
                 sudo apt-get install -y chromium-browser
-                sudo apt-get install -y chromium-chromedriver
-                sudo apt-get install software-properties-common
-                sudo apt-get install -y python-selenium
                 pip3 install selenium
-          - task: Bash@3
-            displayName: Selenium Tests
-            inputs:
-              targetType: 'inline'
-              script: | 
-                #!/bin/bash
-                         
-                cd $(Pipeline.Workspace)/drop-uitests
+                cd ~/
+                DIR=/home/testuser/app
+                if [ ! -d "$DIR" ]; then
+                    mkdir app
+                fi
+                mv /home/testuser/azagent/_work/1/drop-uitests/$(Build.BuildId)-uitests.zip app
+                cd app
                 unzip -o $(Build.BuildId)-uitests.zip
-                
-                rm -rf /var/log/selenium
-                sudo mkdir -p /var/log/selenium
-                sudo chmod 777 /var/log/selenium
-                
-                python3 -u add_remove_from_cart.py 2>&1 | sudo tee -a /var/log/selenium/selenium-test.log
+                FILE=/home/testuser/app/chromedriver_linux64.zip
+                if [ ! -f "$FILE" ]; then
+                    LATEST=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
+                    wget http://chromedriver.storage.googleapis.com/$LATEST/chromedriver_linux64.zip
+                    unzip -o chromedriver_linux64.zip
+                    sudo ln -s $PWD/chromedriver /usr/local/bin/chromedriver
+                fi
+                export PATH=$PATH:/home/testuser/app
+                echo "Starting Selenium Tests"
+                python3 login.py >> selenium.log
 
-                cd $(System.DefaultWorkingDirectory)
-                
-                rm -rf log/selenium
-                mkdir -p log/selenium
-            
-                sudo cp /var/log/selenium/selenium-test.log log/selenium/selenium-test.log
-          - task: PublishPipelineArtifact@1
-            displayName: Publish Selenium Logs
-            inputs:
-              targetPath: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log'
-              artifactName: 'drop-selenium-logs'
+                echo "Completed Selenium Tests. Check selenium.log for results."
         
 # - stage: Destroy
 #   jobs:
