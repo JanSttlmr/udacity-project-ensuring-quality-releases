@@ -182,8 +182,8 @@ stages:
 - stage: Test
   dependsOn: Deploy
   jobs:
-  - job: TestAPI
-    steps:
+  # - job: TestAPI
+  #   steps:
   #   # --------------------------------------------#    
   #   # Postman - Install Newman    
   #   - task: CmdLine@2
