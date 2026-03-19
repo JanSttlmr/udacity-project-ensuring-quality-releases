@@ -279,6 +279,71 @@ stages:
    #--------------------------------------------#  
   # Selenium | Functional UI Tests
   # ToDo: 
+    # - deployment: VMDeploy
+    #   displayName: Selenium Tests
+    #   environment:
+    #     name: $(environmentName)         
+    #     resourceType: VirtualMachine
+    #   strategy:
+    #     runOnce:
+    #       deploy:
+    #         steps:
+    #         # ---------------- Install Python + venv + Selenium ----------------
+    #         - task: Bash@3
+    #           displayName: Selenium installs
+    #           inputs:
+    #             targetType: 'inline'
+    #             script: |
+    #               #!/bin/bash
+                  
+    #               # Update system
+    #               sudo apt-get update -y
+    #               sudo apt-get upgrade -y
+    #               sudo apt-get install -y python3-venv unzip chromium-browser wget
+                  
+    #               # Create virtual environment for Selenium
+    #               python3 -m venv ~/selenium-venv
+    #               source ~/selenium-venv/bin/activate
+                  
+    #               # Upgrade pip inside venv and install Selenium
+    #               pip install --upgrade pip
+    #               pip install selenium
+    
+    #         # ---------------- Run Selenium Tests ----------------
+    #         - task: Bash@3
+    #           displayName: Selenium Tests
+    #           inputs:
+    #             targetType: 'inline'
+    #             script: |
+    #               #!/bin/bash
+                  
+    #               # Activate virtual environment
+    #               source ~/selenium-venv/bin/activate
+    
+    #               # Move to the dropped artifact and unzip
+    #               cd $(Pipeline.Workspace)/drop-uitests
+    #               unzip -o $(Build.BuildId)-uitests.zip -d uitests
+    #               cd uitests
+    
+    #               # Make sure chromedriver is available
+    #               if [ ! -f "chromedriver" ]; then
+    #                   LATEST=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
+    #                   wget http://chromedriver.storage.googleapis.com/$LATEST/chromedriver_linux64.zip
+    #                   unzip -o chromedriver_linux64.zip
+    #                   sudo ln -sf $PWD/chromedriver /usr/local/bin/chromedriver
+    #               fi
+    #               export PATH=$PATH:$PWD
+    
+    #               # Run your Selenium test
+    #               python3 -u login.py 2>&1 | tee selenium-test.log
+    
+    #         # ---------------- Publish Logs ----------------
+    #         - task: PublishPipelineArtifact@1
+    #           displayName: Publish Selenium Logs
+    #           inputs:
+    #             targetPath: '$(Pipeline.Workspace)/drop-uitests/uitests/selenium-test.log'
+    #             artifactName: 'drop-selenium-logs'
+
     - deployment: VMDeploy
       displayName: Selenium Tests
       environment:
@@ -288,6 +353,7 @@ stages:
         runOnce:
           deploy:
             steps:
+    
             # ---------------- Install Python + venv + Selenium ----------------
             - task: Bash@3
               displayName: Selenium installs
@@ -299,12 +365,18 @@ stages:
                   # Update system
                   sudo apt-get update -y
                   sudo apt-get upgrade -y
-                  sudo apt-get install -y python3-venv unzip chromium-browser wget
-                  
+                  sudo apt-get install -y python3-venv unzip wget curl
+    
+                  # Install Chrome stable
+                  wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+                  sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+                  sudo apt-get update -y
+                  sudo apt-get install -y google-chrome-stable
+    
                   # Create virtual environment for Selenium
                   python3 -m venv ~/selenium-venv
                   source ~/selenium-venv/bin/activate
-                  
+    
                   # Upgrade pip inside venv and install Selenium
                   pip install --upgrade pip
                   pip install selenium
@@ -325,17 +397,11 @@ stages:
                   unzip -o $(Build.BuildId)-uitests.zip -d uitests
                   cd uitests
     
-                  # Make sure chromedriver is available
-                  if [ ! -f "chromedriver" ]; then
-                      LATEST=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
-                      wget http://chromedriver.storage.googleapis.com/$LATEST/chromedriver_linux64.zip
-                      unzip -o chromedriver_linux64.zip
-                      sudo ln -sf $PWD/chromedriver /usr/local/bin/chromedriver
-                  fi
+                  # Let Selenium manage chromedriver automatically (no manual download)
                   export PATH=$PATH:$PWD
     
                   # Run your Selenium test
-                  python3 -u login.py 2>&1 | tee selenium-test.log
+                  python3 -u add_remove_from_cart.py 2>&1 | tee selenium-test.log
     
             # ---------------- Publish Logs ----------------
             - task: PublishPipelineArtifact@1
