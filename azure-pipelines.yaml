@@ -100,90 +100,90 @@ stages:
         ARM_TENANT_ID: $(tenantId)
 
    # Run Terraform Destroy
-    - script: |
-        cd $(System.DefaultWorkingDirectory)/terraform/environments/test
-        terraform destroy -auto-approve
-      displayName: 'Terraform Destroy'
-      env:
-        ARM_SUBSCRIPTION_ID: $(subscriptionId)
-        ARM_CLIENT_ID: $(clientId)
-        ARM_CLIENT_SECRET: $(clientSecret)
-        ARM_TENANT_ID: $(tenantId)
+    # - script: |
+    #     cd $(System.DefaultWorkingDirectory)/terraform/environments/test
+    #     terraform destroy -auto-approve
+    #   displayName: 'Terraform Destroy'
+    #   env:
+    #     ARM_SUBSCRIPTION_ID: $(subscriptionId)
+    #     ARM_CLIENT_ID: $(clientId)
+    #     ARM_CLIENT_SECRET: $(clientSecret)
+    #     ARM_TENANT_ID: $(tenantId)
 
 #    #--------------------------------------------#    
     
     # JMeter (Performance) Test Suite - Archive
     # ToDo: Complete the ArchiveFiles@2 task and publish step 
-    # - task: ArchiveFiles@2
-    #   displayName: 'Archive PerformanceTestSuite'
-    #   inputs:
-    #     rootFolderOrFile: '$(projectRoot)/automatedtesting/jmeter/'
-    #     includeRootFolder: false
-    #     archiveType: 'zip'
-    #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip'
-    # # JMeter Test Suite - Publish    
-    # - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip
-    #   displayName: 'Upload Package'
-    #   artifact: drop-perftests
+    - task: ArchiveFiles@2
+      displayName: 'Archive PerformanceTestSuite'
+      inputs:
+        rootFolderOrFile: '$(projectRoot)/automatedtesting/jmeter/'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip'
+    # JMeter Test Suite - Publish    
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip
+      displayName: 'Upload Package'
+      artifact: drop-perftests
 
-    # # Selenium (UI) Test Suite - Archive the package  
-    # # "ArchiveFiles@2" picks up the web package and archives it.
-    # - task: ArchiveFiles@2
-    #   displayName: 'Archive UI Tests'
-    #   inputs:
-    #     rootFolderOrFile: '$(projectRoot)/automatedtesting/selenium'
-    #     includeRootFolder: false
-    #     archiveType: 'zip'
-    #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip'
-    # # Selenium Test Suite - Publish the package  
-    # - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip   # Same as the archiveFile artifact above. 
-    #   displayName: 'Upload Package'
-    #   artifact: drop-uitests
+    # Selenium (UI) Test Suite - Archive the package  
+    # "ArchiveFiles@2" picks up the web package and archives it.
+    - task: ArchiveFiles@2
+      displayName: 'Archive UI Tests'
+      inputs:
+        rootFolderOrFile: '$(projectRoot)/automatedtesting/selenium'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip'
+    # Selenium Test Suite - Publish the package  
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip   # Same as the archiveFile artifact above. 
+      displayName: 'Upload Package'
+      artifact: drop-uitests
 
-    # # FakeRestAPI - Archive
-    # # ToDo: Complete the ArchiveFiles@2 task and publish step 
-    # - task: ArchiveFiles@2
-    #   displayName: 'Archive FakeRestAPI'
-    #   inputs:
-    #     rootFolderOrFile: '$(projectRoot)/automatedtesting/jmeter/fakerestapi'
-    #     includeRootFolder: false
-    #     archiveType: 'zip'
-    #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
-    # - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
-    #   displayName: 'Upload Package'
-    #   artifact: drop-fakerestapi
+    # FakeRestAPI - Archive
+    # ToDo: Complete the ArchiveFiles@2 task and publish step 
+    - task: ArchiveFiles@2
+      displayName: 'Archive FakeRestAPI'
+      inputs:
+        rootFolderOrFile: '$(projectRoot)/automatedtesting/jmeter/fakerestapi'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
+      displayName: 'Upload Package'
+      artifact: drop-fakerestapi
 
 #--------------------------------------------#  
 # DEPLOYMENT STAGE
 #--------------------------------------------#    
-# - stage: Deploy
-#   jobs:
-#   # --------------------------------------------#  
-#   # Deploy FakeRestAPI Web App
-#   - deployment: DeployAPI
-#     #pool: myAP    
-#     environment: $(environmentName)
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:
-#           - checkout: self
-#           - task: AzureWebApp@1
-#             displayName: 'Deploy FakeRestAPI Web App as folder'
-#             inputs:
-#               azureSubscription: '$(azureServiceConnectionId)'
-#               appName: 'testApplication-AppService'
-#               resourceGroupName: 'devops-test-3'
-#               package: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
-#               appType: 'webApp'
-# # --------------------------------------------#  
+- stage: Deploy
+  jobs:
+  # --------------------------------------------#  
+  # Deploy FakeRestAPI Web App
+  - deployment: DeployAPI
+    #pool: myAP    
+    environment: $(environmentName)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - task: AzureWebApp@1
+            displayName: 'Deploy FakeRestAPI Web App as folder'
+            inputs:
+              azureSubscription: '$(azureServiceConnectionId)'
+              appName: 'testApplication-AppService'
+              resourceGroupName: 'devops-test-3'
+              package: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
+              appType: 'webApp'
+# --------------------------------------------#  
 # TEST STAGE
 # --------------------------------------------#    
 # - stage: Test
-#   dependsOn: Deploy
-#   jobs:
-  # - job: TestAPI
-  #   steps:
+  dependsOn: Deploy
+  jobs:
+  - job: TestAPI
+    steps:
   #   # --------------------------------------------#    
   #   # Postman - Install Newman    
   #   - task: CmdLine@2
@@ -276,62 +276,62 @@ stages:
   #--------------------------------------------#  
   # Selenium | Functional UI Tests
   # ToDo: 
-  # - deployment: VMDeploy
-  #   displayName: Selenium Tests
-  #   environment:
-  #     name: $(environmentName)         
-  #     resourceType: VirtualMachine
-  #   strategy:
-  #     runOnce:
-  #       deploy:
-  #         steps:
-  #         - task: Bash@3
-  #           displayName: Selenium installs
-  #           inputs:
-  #             targetType: 'inline'
-  #             script: |           
-  #               #!/bin/bash
-  #               # Update system
-  #               sudo apt-get update -y
-  #               sudo apt-get upgrade -y
+  - deployment: VMDeploy
+    displayName: Selenium Tests
+    environment:
+      name: $(environmentName)         
+      resourceType: VirtualMachine
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: Bash@3
+            displayName: Selenium installs
+            inputs:
+              targetType: 'inline'
+              script: |           
+                #!/bin/bash
+                # Update system
+                sudo apt-get update -y
+                sudo apt-get upgrade -y
                 
-  #               # Python & unzip
-  #               sudo apt-get install -y python3-pip unzip
+                # Python & unzip
+                sudo apt-get install -y python3-pip unzip
                 
-  #               # Chromium + dependencies
-  #               sudo apt-get install -y chromium chromium-driver \
-  #                   libnss3 libgconf-2-4 libxss1 fonts-liberation libappindicator3-1 xvfb
+                # Chromium + dependencies
+                sudo apt-get install -y chromium chromium-driver \
+                    libnss3 libgconf-2-4 libxss1 fonts-liberation libappindicator3-1 xvfb
                 
-  #               # Selenium via pip
-  #               pip3 install --upgrade pip
-  #               pip3 install selenium
-  #         - task: Bash@3
-  #           displayName: Selenium Tests
-  #           inputs:
-  #             targetType: 'inline'
-  #             script: | 
-  #               #!/bin/bash
+                # Selenium via pip
+                pip3 install --upgrade pip
+                pip3 install selenium
+          - task: Bash@3
+            displayName: Selenium Tests
+            inputs:
+              targetType: 'inline'
+              script: | 
+                #!/bin/bash
                          
-  #               cd $(Pipeline.Workspace)/drop-uitests
-  #               unzip -o $(Build.BuildId)-uitests.zip
+                cd $(Pipeline.Workspace)/drop-uitests
+                unzip -o $(Build.BuildId)-uitests.zip
                 
-  #               rm -rf /var/log/selenium
-  #               sudo mkdir -p /var/log/selenium
-  #               sudo chmod 777 /var/log/selenium
+                rm -rf /var/log/selenium
+                sudo mkdir -p /var/log/selenium
+                sudo chmod 777 /var/log/selenium
                 
-  #               python3 -u add_remove_from_cart.py 2>&1 | sudo tee -a /var/log/selenium/selenium-test.log
+                python3 -u add_remove_from_cart.py 2>&1 | sudo tee -a /var/log/selenium/selenium-test.log
 
-  #               cd $(System.DefaultWorkingDirectory)
+                cd $(System.DefaultWorkingDirectory)
                 
-  #               rm -rf log/selenium
-  #               mkdir -p log/selenium
+                rm -rf log/selenium
+                mkdir -p log/selenium
             
-  #               sudo cp /var/log/selenium/selenium-test.log log/selenium/selenium-test.log
-  #         - task: PublishPipelineArtifact@1
-  #           displayName: Publish Selenium Logs
-  #           inputs:
-  #             targetPath: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log'
-  #             artifactName: 'drop-selenium-logs'
+                sudo cp /var/log/selenium/selenium-test.log log/selenium/selenium-test.log
+          - task: PublishPipelineArtifact@1
+            displayName: Publish Selenium Logs
+            inputs:
+              targetPath: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log'
+              artifactName: 'drop-selenium-logs'
         
 # - stage: Destroy
 #   jobs:
