@@ -100,88 +100,88 @@ stages:
         ARM_TENANT_ID: $(tenantId)
 
    # Run Terraform Destroy
-    - script: |
-        cd $(System.DefaultWorkingDirectory)/terraform/environments/test
-        terraform destroy -auto-approve
-      displayName: 'Terraform Destroy'
-      env:
-        ARM_SUBSCRIPTION_ID: $(subscriptionId)
-        ARM_CLIENT_ID: $(clientId)
-        ARM_CLIENT_SECRET: $(clientSecret)
-        ARM_TENANT_ID: $(tenantId)
+    # - script: |
+    #     cd $(System.DefaultWorkingDirectory)/terraform/environments/test
+    #     terraform destroy -auto-approve
+    #   displayName: 'Terraform Destroy'
+    #   env:
+    #     ARM_SUBSCRIPTION_ID: $(subscriptionId)
+    #     ARM_CLIENT_ID: $(clientId)
+    #     ARM_CLIENT_SECRET: $(clientSecret)
+    #     ARM_TENANT_ID: $(tenantId)
 
 #    #--------------------------------------------#    
     
     # JMeter (Performance) Test Suite - Archive
     # ToDo: Complete the ArchiveFiles@2 task and publish step 
-    # - task: ArchiveFiles@2
-    #   displayName: 'Archive PerformanceTestSuite'
-    #   inputs:
-    #     rootFolderOrFile: '$(projectRoot)/automatedtesting/jmeter/'
-    #     includeRootFolder: false
-    #     archiveType: 'zip'
-    #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip'
-    # # JMeter Test Suite - Publish    
-    # - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip
-    #   displayName: 'Upload Package'
-    #   artifact: drop-perftests
+    - task: ArchiveFiles@2
+      displayName: 'Archive PerformanceTestSuite'
+      inputs:
+        rootFolderOrFile: '$(projectRoot)/automatedtesting/jmeter/'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip'
+    # JMeter Test Suite - Publish    
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip
+      displayName: 'Upload Package'
+      artifact: drop-perftests
 
-    # # Selenium (UI) Test Suite - Archive the package  
-    # # "ArchiveFiles@2" picks up the web package and archives it.
-    # - task: ArchiveFiles@2
-    #   displayName: 'Archive UI Tests'
-    #   inputs:
-    #     rootFolderOrFile: '$(projectRoot)/automatedtesting/selenium'
-    #     includeRootFolder: false
-    #     archiveType: 'zip'
-    #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip'
-    # # Selenium Test Suite - Publish the package  
-    # - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip   # Same as the archiveFile artifact above. 
-    #   displayName: 'Upload Package'
-    #   artifact: drop-uitests
+    # Selenium (UI) Test Suite - Archive the package  
+    # "ArchiveFiles@2" picks up the web package and archives it.
+    - task: ArchiveFiles@2
+      displayName: 'Archive UI Tests'
+      inputs:
+        rootFolderOrFile: '$(projectRoot)/automatedtesting/selenium'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip'
+    # Selenium Test Suite - Publish the package  
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip   # Same as the archiveFile artifact above. 
+      displayName: 'Upload Package'
+      artifact: drop-uitests
 
-    # # FakeRestAPI - Archive
-    # # ToDo: Complete the ArchiveFiles@2 task and publish step 
-    # - task: ArchiveFiles@2
-    #   displayName: 'Archive FakeRestAPI'
-    #   inputs:
-    #     rootFolderOrFile: '$(projectRoot)/automatedtesting/jmeter/fakerestapi'
-    #     includeRootFolder: false
-    #     archiveType: 'zip'
-    #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
-    # - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
-    #   displayName: 'Upload Package'
-    #   artifact: drop-fakerestapi
+    # FakeRestAPI - Archive
+    # ToDo: Complete the ArchiveFiles@2 task and publish step 
+    - task: ArchiveFiles@2
+      displayName: 'Archive FakeRestAPI'
+      inputs:
+        rootFolderOrFile: '$(projectRoot)/automatedtesting/jmeter/fakerestapi'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
+      displayName: 'Upload Package'
+      artifact: drop-fakerestapi
 
 #--------------------------------------------#  
 # DEPLOYMENT STAGE
 #--------------------------------------------#    
-# - stage: Deploy
-#   jobs:
-#   # --------------------------------------------#  
-#   # Deploy FakeRestAPI Web App
-#   - deployment: DeployAPI
-#     #pool: myAP    
-#     environment: $(environmentName)
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:
-#           - checkout: self
-#           - task: AzureWebApp@1
-#             displayName: 'Deploy FakeRestAPI Web App as folder'
-#             inputs:
-#               azureSubscription: '$(azureServiceConnectionId)'
-#               appName: 'testApplication-AppService'
-#               resourceGroupName: 'devops-test-3'
-#               package: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
-#               appType: 'webApp'
+- stage: Deploy
+  jobs:
+  # --------------------------------------------#  
+  # Deploy FakeRestAPI Web App
+  - deployment: DeployAPI
+    #pool: myAP    
+    environment: $(environmentName)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - task: AzureWebApp@1
+            displayName: 'Deploy FakeRestAPI Web App as folder'
+            inputs:
+              azureSubscription: '$(azureServiceConnectionId)'
+              appName: 'testApplication-AppService'
+              resourceGroupName: 'devops-test-3'
+              package: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
+              appType: 'webApp'
 # # --------------------------------------------#  
 # # TEST STAGE
 # # --------------------------------------------#    
-# - stage: Test
-#   dependsOn: Deploy
-#   jobs:
+- stage: Test
+  dependsOn: Deploy
+  jobs:
   # - job: TestAPI
   #   steps:
   #   # --------------------------------------------#    
@@ -273,73 +273,73 @@ stages:
   #       targetPath: '$(System.DefaultWorkingDirectory)/log/jmeter'
   #       artifactName: 'drop-jmeter-logs'
 
-    # - deployment: VMDeploy
-    #   displayName: Selenium Tests
-    #   environment:
-    #     name: $(environmentName)         
-    #     resourceType: VirtualMachine
-    #   strategy:
-    #     runOnce:
-    #       deploy:
-    #         steps:
+    - deployment: VMDeploy
+      displayName: Selenium Tests
+      environment:
+        name: $(environmentName)         
+        resourceType: VirtualMachine
+      strategy:
+        runOnce:
+          deploy:
+            steps:
     
-    #         # ---------------- Install Python + venv + Selenium ----------------
-    #         - task: Bash@3
-    #           displayName: Selenium installs
-    #           inputs:
-    #             targetType: 'inline'
-    #             script: |
-    #               #!/bin/bash
+            # ---------------- Install Python + venv + Selenium ----------------
+            - task: Bash@3
+              displayName: Selenium installs
+              inputs:
+                targetType: 'inline'
+                script: |
+                  #!/bin/bash
                   
-    #               # Update system
-    #               sudo apt-get update -y
-    #               sudo apt-get upgrade -y
-    #               sudo apt-get install -y python3-venv unzip wget curl
+                  # Update system
+                  sudo apt-get update -y
+                  sudo apt-get upgrade -y
+                  sudo apt-get install -y python3-venv unzip wget curl
     
-    #               # Install Chrome stable
-    #               wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-    #               sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-    #               sudo apt-get update -y
-    #               sudo apt-get install -y google-chrome-stable
+                  # Install Chrome stable
+                  wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+                  sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+                  sudo apt-get update -y
+                  sudo apt-get install -y google-chrome-stable
                   
-    #               # Create virtual environment for Selenium
-    #               python3 -m venv ~/selenium-venv
-    #               source ~/selenium-venv/bin/activate
+                  # Create virtual environment for Selenium
+                  python3 -m venv ~/selenium-venv
+                  source ~/selenium-venv/bin/activate
     
-    #               # Upgrade pip inside venv and install Selenium
-    #               pip install --upgrade pip
-    #               pip install selenium
+                  # Upgrade pip inside venv and install Selenium
+                  pip install --upgrade pip
+                  pip install selenium
     
-    #         # ---------------- Run Selenium Tests ----------------
-    #         - task: Bash@3
-    #           displayName: Selenium Tests
-    #           inputs:
-    #             targetType: 'inline'
-    #             script: |
-    #               #!/bin/bash
+            # ---------------- Run Selenium Tests ----------------
+            - task: Bash@3
+              displayName: Selenium Tests
+              inputs:
+                targetType: 'inline'
+                script: |
+                  #!/bin/bash
                   
-    #               # Activate virtual environment
-    #               source ~/selenium-venv/bin/activate
+                  # Activate virtual environment
+                  source ~/selenium-venv/bin/activate
 
-    #               sudo rm -f /usr/local/bin/chromedriver
+                  sudo rm -f /usr/local/bin/chromedriver
     
-    #               # Move to the dropped artifact and unzip
-    #               cd $(Pipeline.Workspace)/drop-uitests
-    #               unzip -o $(Build.BuildId)-uitests.zip -d uitests
-    #               cd uitests
+                  # Move to the dropped artifact and unzip
+                  cd $(Pipeline.Workspace)/drop-uitests
+                  unzip -o $(Build.BuildId)-uitests.zip -d uitests
+                  cd uitests
     
-    #               # Let Selenium manage chromedriver automatically (no manual download)
-    #               export PATH=$PATH:$PWD
+                  # Let Selenium manage chromedriver automatically (no manual download)
+                  export PATH=$PATH:$PWD
     
-    #               # Run your Selenium test
-    #               python3 -u login.py 2>&1 | tee selenium-test.log
+                  # Run your Selenium test
+                  python3 -u login.py 2>&1 | tee selenium-test.log
     
-    #         # ---------------- Publish Logs ----------------
-    #         - task: PublishPipelineArtifact@1
-    #           displayName: Publish Selenium Logs
-    #           inputs:
-    #             targetPath: '$(Pipeline.Workspace)/drop-uitests/uitests/selenium-test.log'
-    #             artifactName: 'drop-selenium-logs'
+            # ---------------- Publish Logs ----------------
+            - task: PublishPipelineArtifact@1
+              displayName: Publish Selenium Logs
+              inputs:
+                targetPath: '$(Pipeline.Workspace)/drop-uitests/uitests/selenium-test.log'
+                artifactName: 'drop-selenium-logs'
         
 # - stage: Destroy
 #   jobs:
