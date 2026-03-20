@@ -219,8 +219,8 @@ stages:
         mergeTestResults: true
         testRunTitle: 'Publish test results'
   
-   --------------------------------------------
-   Jmeter - Performance Test Suite     
+   # --------------------------------------------
+   # Jmeter - Performance Test Suite     
   - job: TestJMeter
     displayName: Test JMeter
    # pool: myAP
