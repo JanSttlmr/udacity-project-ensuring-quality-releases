@@ -1,245 +1,176 @@
 {
-	"info": {
-		"_postman_id": "f4915dd0-b0d4-4707-be58-2d28b15cd9d6",
-		"name": "TestSuite.Regression",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "Status code verification",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							""
-						]
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/get",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"get"
-					]
-				},
-				"description": "The test on this request asserts that the reponse has a \"200 OK\" status.\n\nYou can check for any HTTP status code using the same mechanism, for example `pm.response.to.have.status(403)` if your API should return an \"Unauthorized\" response."
-			},
-			"response": []
-		},
-		{
-			"name": "JSON schema response validation",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"// Describe the expected response shape with JSON Schema",
-							"// https://json-schema.org/",
-							"const expectedSchema = {",
-							"  \"type\": \"object\",",
-							"  \"properties\": {",
-							"    \"data\": {",
-							"      \"type\": \"array\",",
-							"      \"items\": {",
-							"        \"type\": \"object\",",
-							"        \"properties\": {",
-							"          \"title\": {",
-							"            \"type\": \"string\"",
-							"          },",
-							"          \"author\": {",
-							"            \"type\": \"string\"",
-							"          },",
-							"          \"published\": {",
-							"            \"type\": \"integer\"",
-							"          }",
-							"        },",
-							"        \"required\": [",
-							"          \"title\",",
-							"          \"author\",",
-							"          \"published\"",
-							"        ]",
-							"      }",
-							"    }",
-							"  }",
-							"};",
-							"",
-							"// Test that the response matches the expected schema using built-in schema verification",
-							"pm.test('response matches JSON schema', () => {",
-							"    pm.response.to.have.jsonSchema(expectedSchema);",
-							"});"
-						]
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "[{\n    \"title\": \"Sapiens\",\n    \"author\": \"Yuval Noah Harari\",\n    \"published\": 2011\n}, {\n    \"title\": \"Moneyball\",\n    \"author\": \"Michael Lewis\",\n    \"published\": 2010\n}, {\n    \"title\": \"Women & Power\",\n    \"author\": \"Mary Beard\",\n    \"published\": 2017\n}]",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/post",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"post"
-					]
-				},
-				"description": "This request has a test using Postman's built-in support for JSON Schema verification to ensure that the response data matches the expected shape.\n\nSchema validation can be used to verify your API returns data in the right format, without worrying about the exact values. This might be helpful when testing various inputs for a consistent output format.\n\nLearn more about JSON Schema at [https://json-schema.org](https://json-schema.org/.)."
-			},
-			"response": []
-		},
-		{
-			"name": "Custom response validation",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"const getData = () => pm.response.json().data;",
-							"",
-							"pm.test(\"Returns a book object\", () => {",
-							"    const data = getData();",
-							"",
-							"    // Check the expected properties exist",
-							"    pm.expect(data).to.have.property(\"title\");",
-							"    pm.expect(data).to.have.property(\"author\");",
-							"    pm.expect(data).to.have.property(\"published\");",
-							"",
-							"    // Check the values have the expected types",
-							"    pm.expect(data.title).to.be.a('string');",
-							"    pm.expect(data.author).to.be.a('string');",
-							"    pm.expect(data.published).to.be.a('number');",
-							"});",
-							"",
-							"pm.test(\"Return correct details for 'Sapiens' book\", () => {",
-							"    const data = getData();",
-							"",
-							"    // Check expected values are present",
-							"    pm.expect(data.title).to.equal(\"Sapiens\");",
-							"    pm.expect(data.author).to.equal(\"Yuval Noah Harari\");",
-							"    pm.expect(data.published).to.equal(2011);",
-							"});"
-						]
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"title\": \"Sapiens\",\n    \"author\": \"Yuval Noah Harari\",\n    \"published\": 2011\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/post",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"post"
-					]
-				},
-				"description": "This request uses tests to verify both the structure (existence and type of individual properties) and exact values of the response data.\n\nUse `pm.expect(subject)` to wrap test subjects, and [Chai](https://www.chaijs.com/api/bdd/) for assertions."
-			},
-			"response": []
-		},
-		{
-			"name": "Response time verification",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"pm.test(\"Verify response time is less than 5 seconds\", function () {",
-							"    const fiveSecondsMs = 5_000; // 5 seconds in milliseconds",
-							"    pm.expect(pm.response.responseTime).to.be.below(fiveSecondsMs);",
-							"});",
-							""
-						]
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"foo\": \"bar\"\n}\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/get",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"get"
-					]
-				},
-				"description": "This request has a test asserting that a response is received within a specific time limit (in this case 5 seconds). This is useful for ensuring consistent API performance.\n\nYou can access details of the response, such as response time, on the `pm.response` object. See the [response object documentation](https://learning.postman.com/docs/writing-scripts/script-references/postman-sandbox-api-reference/#scripting-with-response-data) for other properties available."
-			},
-			"response": []
-		},
-	]
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"key": "baseUrl",
-			"value": "https://postman-echo.com",
-			"type": "string"
-		}
-	]
+  "info": {
+    "_postman_id": "f4915dd0-b0d4-4707-be58-2d28b15cd9d6",
+    "name": "TestSuite.Regression",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Status code verification",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/get",
+          "host": ["{{baseUrl}}"],
+          "path": ["get"]
+        },
+        "description": "Asser 200 response"
+      },
+      "response": []
+    },
+    {
+      "name": "JSON schema response validation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const expectedSchema = {",
+              "  type: \"object\",",
+              "  properties: {",
+              "    data: {",
+              "      type: \"array\"",
+              "    }",
+              "  }",
+              "};",
+              "",
+              "pm.test('response matches JSON schema', () => {",
+              "    pm.response.to.have.jsonSchema(expectedSchema);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "[{\"title\":\"Sapiens\",\"author\":\"Yuval Noah Harari\",\"published\":2011}]",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/post",
+          "host": ["{{baseUrl}}"],
+          "path": ["post"]
+        },
+        "description": "json schema validation."
+      },
+      "response": []
+    },
+    {
+      "name": "Custom response validation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const getData = () => pm.response.json().json;",
+              "",
+              "pm.test(\"Returns a book object\", () => {",
+              "    const data = getData();",
+              "    pm.expect(data).to.be.an('object');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"Sapiens\",\"author\":\"Yuval Noah Harari\",\"published\":2011}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/post",
+          "host": ["{{baseUrl}}"],
+          "path": ["post"]
+        },
+        "description": "."
+      },
+      "response": []
+    },
+    {
+      "name": "Response time verification",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Verify response time is less than 5 seconds\", function () {",
+              "    const fiveSecondsMs = 5000;",
+              "    pm.expect(pm.response.responseTime).to.be.below(fiveSecondsMs);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/get",
+          "host": ["{{baseUrl}}"],
+          "path": ["get"]
+        },
+        "description": "Verify response time"
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://postman-echo.com",
+      "type": "string"
+    }
+  ]
 }
