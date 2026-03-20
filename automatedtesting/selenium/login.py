@@ -36,7 +36,7 @@ def add_items(driver):
 
     for item in items[:min(6, len(items))]:
         item_name = item.find_element(By.CLASS_NAME, "inventory_item_name").text
-        #print(item_name)
+        print(item_name)
         button = item.find_element(By.CSS_SELECTOR, ".pricebar > button")
         button.click()
         added_items.append(item_name)
