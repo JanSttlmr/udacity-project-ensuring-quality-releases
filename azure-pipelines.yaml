@@ -264,7 +264,7 @@ stages:
       runOnce:
         deploy:
           steps:
-          # ---------------- Install Python + venv + Selenium ----------------
+          # Install Python + venv + Selenium
           - task: Bash@3
             displayName: Selenium installs
             inputs:
@@ -291,7 +291,7 @@ stages:
                 pip install --upgrade pip
                 pip install selenium
   
-          # ---------------- Run Selenium Tests ----------------
+          # Run Selenium Tests
           - task: Bash@3
             displayName: Selenium Tests
             inputs:
@@ -315,7 +315,7 @@ stages:
                 # Run your Selenium test
                 python3 -u login.py 2>&1 | tee selenium-test.log
   
-          # ---------------- Publish Logs ----------------
+          # Publish Logs
           - task: PublishPipelineArtifact@1
             displayName: Publish Selenium Logs
             inputs:
