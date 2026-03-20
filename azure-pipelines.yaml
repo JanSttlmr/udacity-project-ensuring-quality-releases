@@ -182,96 +182,96 @@ stages:
 - stage: Test
   dependsOn: Deploy
   jobs:
-  # - job: TestAPI
-  #   steps:
-  #   # --------------------------------------------#    
-  #   # Postman - Install Newman    
-  #   - task: CmdLine@2
-  #     displayName: Install Newman
-  #     inputs:
-  #       script: |
-  #         sudo apt-get -y install npm
-  #         sudo npm cache clean -f
-  #         sudo npm install -g n
-  #         sudo n stable
-  #         sudo npm install -g newman
-  #       workingDirectory: $(projectRoot)
-  #   # Postman Data Validation Test Suite    
-  #   - task: CmdLine@2
-  #     displayName: Run Data Validation Tests
-  #     continueOnError: true
-  #     inputs:
-  #       script: 'newman run TestSuite.Data-Validation.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-DataValidation.xml'
-  #       workingDirectory: '$(projectRoot)/automatedtesting/postman'
-  #   # Postman Regression Test Suite    
-  #   - task: CmdLine@2
-  #     displayName: Run Regression Tests
-  #     continueOnError: true
-  #     inputs:
-  #       script: 'newman run TestSuite.Regression.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml'
-  #       workingDirectory: '$(projectRoot)/automatedtesting/postman'
-  #   # Postman - Publish Results 
-  #   - task: PublishTestResults@2
-  #     inputs:
-  #       testResultsFormat: 'JUnit'
-  #       testResultsFiles: '**/TEST-*.xml'
-  #       searchFolder: 'automatedtesting/postman'
-  #       mergeTestResults: true
-  #       testRunTitle: 'Publish test results'
+  - job: TestAPI
+    steps:
+    # --------------------------------------------#    
+    # Postman - Install Newman    
+    - task: CmdLine@2
+      displayName: Install Newman
+      inputs:
+        script: |
+          sudo apt-get -y install npm
+          sudo npm cache clean -f
+          sudo npm install -g n
+          sudo n stable
+          sudo npm install -g newman
+        workingDirectory: $(projectRoot)
+    # Postman Data Validation Test Suite    
+    - task: CmdLine@2
+      displayName: Run Data Validation Tests
+      continueOnError: true
+      inputs:
+        script: 'newman run TestSuite.Data-Validation.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-DataValidation.xml'
+        workingDirectory: '$(projectRoot)/automatedtesting/postman'
+    # Postman Regression Test Suite    
+    - task: CmdLine@2
+      displayName: Run Regression Tests
+      continueOnError: true
+      inputs:
+        script: 'newman run TestSuite.Regression.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml'
+        workingDirectory: '$(projectRoot)/automatedtesting/postman'
+    # Postman - Publish Results 
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/TEST-*.xml'
+        searchFolder: 'automatedtesting/postman'
+        mergeTestResults: true
+        testRunTitle: 'Publish test results'
   
-#    --------------------------------------------
-#    Jmeter - Performance Test Suite     
-  # - job: TestJMeter
-  #   displayName: Test JMeter
-  #  # pool: myAP
-  #   steps:
-  #   - bash: |
-  #       echo "Waiting for API..."
-  #       until curl -s https://testapplication-appservice.azurewebsites.net > /dev/null; do
-  #         echo "Still waiting..."
-  #         sleep 10
-  #       done
-  #     displayName: Wait for API startup
-  #   - bash: |
-  #       sudo apt-get install openjdk-11-jre-headless -y
-  #       java -version
-  #       wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.2.tgz -O jmeter.tgz
-  #       tar xzvf jmeter.tgz
-  #       mkdir -p log/jmeter
-  #     displayName: Install JMeter
-  #   - bash: |
-  #       apache-jmeter-5.6.2/bin/jmeter -n -t automatedtesting/jmeter/stress-test.jmx \
-  #                                   -l log/jmeter/stress-test-result.csv \
-  #                                   -e -f -o log/jmeter/stress-test-html-report \
-  #                                   -j log/jmeter/jmeter-stress-test.log
-  #     displayName: JMeter Stress Test
-  #   - bash: |
-  #       apache-jmeter-5.6.2/bin/jmeter -n -t automatedtesting/jmeter/endurance-test.jmx \
-  #                                   -l log/jmeter/endurance-test-result.csv \
-  #                                   -e -f -o log/jmeter/endurance-test-html-report \
-  #                                   -j log/jmeter/jmeter-endurance-test.log
-  #     displayName: JMeter Endurance Test
-  #   - task: ArchiveFiles@2
-  #     displayName: Save JMeter Stress Test Report to Artifact
-  #     inputs:
-  #       rootFolderOrFile: '$(System.DefaultWorkingDirectory)/log/jmeter/stress-test-html-report'
-  #       includeRootFolder: false
-  #       archiveType: 'zip'
-  #       archiveFile: '$(System.DefaultWorkingDirectory)/log/jmeter/stress-test-html-report-$(Build.BuildId).zip'
-  #       verbose: true
-  #   - task: ArchiveFiles@2
-  #     displayName: Save JMeter Endurance Test Report to Artifact
-  #     inputs:
-  #       rootFolderOrFile: '$(System.DefaultWorkingDirectory)/log/jmeter/endurance-test-html-report'
-  #       includeRootFolder: false
-  #       archiveType: 'zip'
-  #       archiveFile: '$(System.DefaultWorkingDirectory)/log/jmeter/endurance-test-html-report-$(Build.BuildId).zip'
-  #       verbose: true
-  #   - task: PublishPipelineArtifact@1
-  #     displayName: Publish JMeter Logs
-  #     inputs:
-  #       targetPath: '$(System.DefaultWorkingDirectory)/log/jmeter'
-  #       artifactName: 'drop-jmeter-logs'
+   --------------------------------------------
+   Jmeter - Performance Test Suite     
+  - job: TestJMeter
+    displayName: Test JMeter
+   # pool: myAP
+    steps:
+    - bash: |
+        echo "Waiting for API..."
+        until curl -s https://testapplication-appservice.azurewebsites.net > /dev/null; do
+          echo "Still waiting..."
+          sleep 10
+        done
+      displayName: Wait for API startup
+    - bash: |
+        sudo apt-get install openjdk-11-jre-headless -y
+        java -version
+        wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.2.tgz -O jmeter.tgz
+        tar xzvf jmeter.tgz
+        mkdir -p log/jmeter
+      displayName: Install JMeter
+    - bash: |
+        apache-jmeter-5.6.2/bin/jmeter -n -t automatedtesting/jmeter/stress-test.jmx \
+                                    -l log/jmeter/stress-test-result.csv \
+                                    -e -f -o log/jmeter/stress-test-html-report \
+                                    -j log/jmeter/jmeter-stress-test.log
+      displayName: JMeter Stress Test
+    - bash: |
+        apache-jmeter-5.6.2/bin/jmeter -n -t automatedtesting/jmeter/endurance-test.jmx \
+                                    -l log/jmeter/endurance-test-result.csv \
+                                    -e -f -o log/jmeter/endurance-test-html-report \
+                                    -j log/jmeter/jmeter-endurance-test.log
+      displayName: JMeter Endurance Test
+    - task: ArchiveFiles@2
+      displayName: Save JMeter Stress Test Report to Artifact
+      inputs:
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/log/jmeter/stress-test-html-report'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(System.DefaultWorkingDirectory)/log/jmeter/stress-test-html-report-$(Build.BuildId).zip'
+        verbose: true
+    - task: ArchiveFiles@2
+      displayName: Save JMeter Endurance Test Report to Artifact
+      inputs:
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/log/jmeter/endurance-test-html-report'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(System.DefaultWorkingDirectory)/log/jmeter/endurance-test-html-report-$(Build.BuildId).zip'
+        verbose: true
+    - task: PublishPipelineArtifact@1
+      displayName: Publish JMeter Logs
+      inputs:
+        targetPath: '$(System.DefaultWorkingDirectory)/log/jmeter'
+        artifactName: 'drop-jmeter-logs'
 
     - deployment: VMDeploy
       displayName: Selenium Tests
