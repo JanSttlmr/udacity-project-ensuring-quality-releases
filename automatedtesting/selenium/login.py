@@ -3,10 +3,12 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
+import datetime
 
 URL = "https://www.saucedemo.com/"
 
 def login(user, password):
+    print(datetime.datetime.now())
     print("Starting the browser...")
     options = ChromeOptions()
     options.add_argument("--headless=new")  # Headless mode
@@ -27,6 +29,7 @@ def login(user, password):
 
 
 def add_items(driver):
+    print(datetime.datetime.now())
     print("Start test adding items to cart...")
     items = driver.find_elements(By.CSS_SELECTOR, ".inventory_item")
     added_items = []
@@ -47,6 +50,7 @@ def add_items(driver):
 
 
 def remove_items(driver):
+    print(datetime.datetime.now())
     print("Start test removing items from the cart...")
     driver.find_element(By.CLASS_NAME, "shopping_cart_link").click()
     items = driver.find_elements(By.CLASS_NAME, "cart_item")
